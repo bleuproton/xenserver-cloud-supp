@@ -1,0 +1,16 @@
+<packages>
+<package label="kernel-csp-xen" type="driver-rpm" kernel="any" size="16172910" md5="c727f7aac7c4cbb685a82dca496acf89">kernel-csp-xen-2.6.32.12-0.7.1.xs5.6.100.327.170613csp.i686.rpm</package>
+<package label="ipset" type="driver-rpm" kernel="2.6.32.12-0.7.1.xs5.6.100.327.170613cspxen" size="47883" md5="0259c9aaa1695b2690058b2c0fbaacf1">ipset-modules-xen-2.6.32.12-0.7.1.xs5.6.100.327.170613csp-4.5-1.xs26.i686.rpm</package>
+<package label="kernel-csp-kdump" type="driver-rpm" kernel="any" size="15686074" md5="aa832c99ba24f4a6a1932ca817ede10f">kernel-csp-kdump-2.6.32.12-0.7.1.xs5.6.100.327.170613csp.i686.rpm</package>
+<package label="ipset" type="driver-rpm" kernel="2.6.32.12-0.7.1.xs5.6.100.327.170613cspkdump" size="47898" md5="732af566501def5fbd2ba5ead0601c24">ipset-modules-kdump-2.6.32.12-0.7.1.xs5.6.100.327.170613csp-4.5-1.xs26.i686.rpm</package>
+<package label="ebtables" type="rpm" size="98961" md5="c7301994d3f12200275cf0a5274b5408">ebtables-2.0.9-1.el5.1.xs.i386.rpm</package>
+<package label="csp-pack" type="rpm" size="3868" md5="205678ad5b5324fe48f6344cc6d3e4d2">csp-pack-5.6.100-50867p.noarch.rpm</package>
+<package label="iptables" type="rpm" size="247207" md5="afaa2309898fb051a2b2767aadf83f79">iptables-1.3.5-5.3.el5_4.1.1.xs26.i386.rpm</package>
+<package label="arptables" type="rpm" size="31340" md5="8bae5342104e6ea43b598a29ddd49c83">arptables-0.0.3-4.i686.rpm</package>
+<package label="ipset" type="rpm" size="46799" md5="bfaadf46436ad33766ac956625898ded">ipset-4.5-1.xs26.i686.rpm</package>
+<package label="iptables-debuginfo" type="rpm" size="719932" md5="448be91acdd476430884a264a7c4ac13">iptables-debuginfo-1.3.5-5.3.el5_4.1.1.xs26.i386.rpm</package>
+<package label="iptables-devel" type="rpm" size="49673" md5="1931df8a23311cc8251ad6716fc5da7b">iptables-devel-1.3.5-5.3.el5_4.1.1.xs26.i386.rpm</package>
+<package label="iptables-ipv6" type="rpm" size="166119" md5="4da525b90c1d70f117ba8089f50d2869">iptables-ipv6-1.3.5-5.3.el5_4.1.1.xs26.i386.rpm</package>
+<package label="md3000-rdac" type="driver-rpm" kernel="kdump-2.6.32.12-0.7.1.xs5.6.100.327.170613cspcsp" size="142813" md5="1b92711872e17d1534c3919ca296f14a">md3000-rdac-modules-csp-kdump-2.6.32.12-0.7.1.xs5.6.100.327.170613csp-09.03.0C00.0437-26.i686.rpm</package>
+<package label="md3000-rdac" type="driver-rpm" kernel="xen-2.6.32.12-0.7.1.xs5.6.100.327.170613cspcsp" size="925488" md5="30c70611848fa89cfdb83319ce65e287">md3000-rdac-modules-csp-xen-2.6.32.12-0.7.1.xs5.6.100.327.170613csp-09.03.0C00.0437-26.i686.rpm</package>
+</packages>

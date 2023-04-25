@@ -1,0 +1,82 @@
+Cloud Service Providers Supplemental Pack
+-----------------------------------------
+
+Introduction
+============
+
+This supplemental pack is designed to modify a XenServer 5.6 SP2 installation to provide tools needed for hosting multiple untrusted guests.
+
+The pack includes the following components:
+* arptables
+* ebtables
+* ipset
+* Updated kernel, including the modules needed for arptables, ebtables and multi-tenancy rules
+* Ensures that the Linux Bridging Stack is used (rather than the vswitch stack)
+
+Due to a change in the sysctl settings to ensure bridge traffic is passed through iptables, the default iptables rules prevent DHCP for guests.  The expected use case is for customers to update their firewall rules as the power state of guests are changed.
+
+There is currently no upgrade path defined from this cloud supplemental pack.  An upgrade path to any version which does not include the above functionality by default would require the creation of a corresponding cloud supplemental pack
+
+Installation
+============
+
+Installation of this supplemental pack must occur at initial installation time, using an answer-file and network installation:
+
+1) Copy the following files and directories from the standard XenServer installation into a network-accessible directory (on NFS or a web server):
+* packages.linux
+* packages.main
+* packages.transfer-vm
+* XS-REPOSITORY-LIST
+
+2) Copy the following files and directories from the supplemental pack into the same directory:
+* packages.cloud-supp
+* post-install.sh
+
+3) Modify the XS-REPOSITORY-LIST file to include the packages.cloud-supp repository
+
+4) Create an answerfile, using example-answerfile as a template.  See the XenServer Installation Guide Appendix B for more details.  Note that the post-install.sh script referenced from the example-answerfile is required to complete the installation of the supplemental pack and should be used at the "installation-complete" stage which is equivalent to the script run in the tag <install-failed-script> (this script is run after all installations - despite the name suggesting it is run after failed installations only).
+
+5) Install XenServer using the answerfile as described in the XenServer Installation Guide, Appendix B.
+
+After installation, the userspace tools ebtables and arptables will be installed in dom0 alongside the existing iptables, allowing for creation of rich bridge filtering rules.
+
+
+Generating a CSP DDK to build driver disks
+==========================================
+
+The CSP kernel uses the same sources as the standard kernel, with the only difference being the configuration file.  The following instructions can be used to create a DDK that can build against the XenServer 5.6 SP2 Cloud Supplemental Pack kernel
+
+1) Create a standard XenServer 5.6 SP2 DDK
+
+2) Install the CSP kdump kernel and xen kernel RPMs from the Cloud Supplemental Pack, for example:
+rpm -i kernel-csp-kdump-2.6.32.12-0.7.1.xs5.6.100.307.170586csp.i686.rpm
+rpm -i kernel-csp-xen-2.6.32.12-0.7.1.xs5.6.100.307.170586csp.i686.rpm
+
+3) Update the /boot/grub/menu.lst configuration file to remove the cspkdump kernel and alter the csp kernel to boot as a standard kernel, without using the xen hypervisor
+sed -i.bck -e '/kdump/d;/xen.gz/d;/vmlinuz/s/module/kernel/;/initrd/s/module/initrd/' /boot/grub/menu.lst
+
+Note that XenServer will boot the first kernel/initrd found in the grubs menu.lst file, so ensure the cspxen kernel is the first in the list.  If you want to boot the stock kernel, switch the order of the two kernel definitions in the grub/menu.lst file.
+
+4) Reboot the DDK to start using the CSP kernel within the DDK
+4.1) Confirm the correct kernel has been booted by checking output of uname -r, it should end with cspxen, similar to 2.6.32.12-0.7.1.xs5.6.100.307.170586cspxen
+
+5) Create source directories for the CSP versions of the kernel based on the stock kernel sources:
+ver=`rpm -q kernel-csp-xen | sed -e 's/kernel-csp-xen-//;s/csp//'`
+for kern in xen kdump
+do
+    # Create the sources directory
+    rm -rf /usr/src/kernels/${ver}csp${kern}-i686
+    cp -rf /usr/src/kernels/${ver}${kern}-i686 /usr/src/kernels/${ver}csp${kern}-i686
+    rm -f /usr/src/kernels/${ver}csp${kern}-i686/.config
+    # Update the version number to match the sources directory
+    echo ${ver}csp${kern} > /usr/src/kernels/${ver}csp${kern}-i686/include/config/kernel.release
+    cp /boot/config-${ver}csp${kern} /usr/src/kernels/${ver}csp${kern}-i686/.config
+    
+    # Create the build symlink
+    cd /lib/modules/${ver}csp${kern}/
+    ln -sf /usr/src/kernels/${ver}csp${kern}-i686 source
+    ln -sf /usr/src/kernels/${ver}csp${kern}-i686 build
+    cd -
+done
+
+Modules or drivers created with this modified DDK will be compatible with the CSP kernel.
